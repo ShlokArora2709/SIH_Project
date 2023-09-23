@@ -9,18 +9,18 @@ conn = mysql.connector.connect(
     database="cases"   # Replace with your database name
 )
 
-def Show_Case_Info(CaseID):
+def Show_Case_Info(username):
 
     try:
         cursor = conn.cursor()
 
         # Query the database to retrieve case information
-        cursor.execute("SELECT * FROM case_info WHERE case_id = %s", (CaseID,))
-        result = cursor.fetchone()
+        cursor.execute("SELECT * FROM case_info WHERE Petitioner_Name OR Respondent_Name = %s", (username,))
+        result = cursor.fetchall()
         if result:
             return result;
         else:
-            error=(f"Case {CaseID} not found.")
+            error=(f"Case {username} not found.")
             return error;
 
     except mysql.connector.Error as e:
@@ -30,3 +30,4 @@ def Show_Case_Info(CaseID):
 
 if __name__ == "__main__":
     Show_Case_Info()
+
