@@ -4,11 +4,15 @@ import chatbot3 as cb
 import pySQLcase as case
 import summary as summ
 import csv
-
+from flask_session import Session
 app = Flask(__name__)
 
 # Define the folder where your PDF files are stored
 pdf_folder = "\\PDFs\\"  # Create a folder named "pdfs" and place your PDF files inside
+
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
+
 
 @app.route('/')
 def home():
@@ -71,8 +75,10 @@ def summary():
 
 @app.route("/casinfo",methods=['GET', 'POST'])
 def casinfo():
-    C_ID=request.form["CASE_ID"]
-    result=case.Show_Case_Info(C_ID)
+    if 'username' in session:
+        username = session['username']
+    
+    result=case.Show_Case_Info(username)
     return result
 
 @app.route('/FIR')
